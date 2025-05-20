@@ -1,0 +1,16 @@
+== Suppressed Messages ==
+
+# Add warning and/or information messages here after you've confirmed that they aren't really a problem
+# (And include comments like this justifying why)
+# See https://github.com/FHIR/sample-ig/blob/master/input/ignoreWarnings.txt for examples
+
+The HTML fragment 'ip-statements.xhtml' is not included anywhere in the produced implementation guide
+An HTML fragment from the set [cross-version-analysis.xhtml, cross-version-analysis-inline.xhtml] is not included anywhere in the produced implementation guide
+An HTML fragment from the set [dependency-table.xhtml, dependency-table-short.xhtml, dependency-table-nontech.xhtml] is not included anywhere in the produced implementation guide
+The HTML fragment 'globals-table.xhtml' is not included anywhere in the produced implementation guide
+The IG is not for the international realm, and it uses SNOMED CT, so it should fix the SCT edition in the expansion parameters
+The Implementation Guide contains no examples for this extension
+The Implementation Guide contains no examples for this profile
+The Implementation Guide contains no examples for this data type profile
+The nominated WG 'pc' means that the publisher should be 'HL7 International / Patient Care' but 'Interweave Publisher' was found
+The nominated WG 'pc' means that the contact url should be 'http://www.hl7.org/Special/committees/patientcare' but it was not found
