@@ -124,6 +124,14 @@ Description: "Interweave Organization Structure map for conversion."
 * group[=].rule[=].target.element = "versionId"
 * group[=].rule[=].target.transform = #copy
 * group[=].rule[=].target.parameter.valueString = "1"
+/**
+ * I don't think we need to explicitly set the profile in the StructureMap. This one from HL7
+ * doesn't set the profile: https://build.fhir.org/ig/HL7/fhir-cross-version/StructureMap-Patient3to4.html
+ * Our $transform library code automatically adds in the profile from the corresponding "uses"
+ * declaration.
+ *
+ * Otherwise... I think the "meta" is okay.
+ */
 * group[=].rule[+].name = "profile"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "profile"
@@ -133,6 +141,7 @@ Description: "Interweave Organization Structure map for conversion."
 * group[=].rule[=].target.element = "profile"
 * group[=].rule[=].target.transform = #append
 * group[=].rule[=].target.parameter.valueString = "http://hl7.org/fhir/uv/ips/StructureDefinition/Organization-uv-ips"
+
 * group[=].rule[+].name = "tag"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "tag"
