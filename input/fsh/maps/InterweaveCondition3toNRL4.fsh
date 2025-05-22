@@ -329,6 +329,11 @@ Description: "Interweave Condition Structure map for conversion."
 * group[=].rule[=].target.variable = "vvv"
 * group[=].rule[=].target.transform = #create
 * group[+].name = "evidence"
+/**
+ * #type-and-types makes this group the default for ALL elements of this type, so if this map were
+ * imported by another map, all BackboneElements would use this group. As such, this should be set
+ * to #none.
+ */
 * group[=].typeMode = #type-and-types
 * group[=].input[0].name = "src"
 * group[=].input[=].mode = #source
@@ -337,10 +342,18 @@ Description: "Interweave Condition Structure map for conversion."
 * group[=].rule[0].name = "code"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "code"
+/**
+ * In my last update, I deleted these automatically generated "vvv" elements, because they prevent
+ * us from distinguishing the source from the target (because they have the same name).
+ */
 * group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "code"
 * group[=].rule[=].target.variable = "vvv"
+/**
+ * When the transform "src.a -> tgt.a" is used, #create is implied, so could just be excluded here.
+ * See https://www.hl7.org/fhir/mapping-language.html#simple.
+ */
 * group[=].rule[=].target.transform = #create
 * group[=].rule[+].name = "detail"
 * group[=].rule[=].source.context = "src"
