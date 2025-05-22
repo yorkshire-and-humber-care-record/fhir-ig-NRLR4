@@ -7,12 +7,17 @@ Usage: #definition
 * url = "https://fhir.interweavedigital.nhs.uk/NRL-R4/StructureMap/InterweaveAllergyIntolerance3toNRL4"
 * name = "InterweaveAllergyIntolerance3toNRL4"
 * status = #draft
+
 * structure[0].url = "https://fhir.yhcr.nhs.uk/StructureDefinition/Interweave-AllergyIntolerance"
 * structure[=].mode = #source
 * structure[=].alias = "AllergyIntoleranceSTU3"
 * structure[+].url = "https://fhir.interweavedigital.nhs.uk/NRL-R4/StructureDefinition/Interweave-AllergyIntolerance"
 * structure[=].mode = #target
 * structure[=].alias = "AllergyIntoleranceR4"
+
+// Special syntax for importing all base STU3 to R4 StructureMaps. See https://build.fhir.org/ig/HL7/fhir-cross-version/StructureMap-Patient3to4.html for example.
+* import[0] = "http://hl7.org/fhir/StructureMap/*3to4"
+
 * group[0].name = "AllergyIntolerance"
 * group[=].typeMode = #type-and-types
 * group[=].input[0].name = "src"
@@ -21,10 +26,16 @@ Usage: #definition
 * group[=].input[+].name = "tgt"
 * group[=].input[=].type = "AllergyIntoleranceR4"
 * group[=].input[=].mode = #target
+
+// assign UUID:
 * group[=].rule[0].name = "id"
 * group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "id"
+* group[=].rule[=].target.context = "tgt"
+* group[=].rule[=].target.element = "id"
 * group[=].rule[=].target.transform = #uuid
+* group[=].rule[=].target.name = "setId"
+
+// move "encounter" to R4 ".encounter" property:
 * group[=].rule[+].name = "extension"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "extension"
@@ -38,21 +49,18 @@ Usage: #definition
 * group[=].rule[=].rule.source.type = "Reference"
 * group[=].rule[=].rule.source.element = "value"
 * group[=].rule[=].rule.source.variable = "vs"
-* group[=].rule[=].rule.target[0].variable = "vt1"
-* group[=].rule[=].rule.target[=].transform = #copy
-* group[=].rule[=].rule.target[=].parameter.valueId = "vt"
-* group[=].rule[=].rule.target[+].context = "tgt"
-* group[=].rule[=].rule.target[=].element = "encounter"
+* group[=].rule[=].rule.target[0].context = "vt"
 * group[=].rule[=].rule.target[=].transform = #copy
 * group[=].rule[=].rule.target[=].parameter.valueId = "vs"
+
+// simple identity transform for "identifier"
 * group[=].rule[+].name = "identifier"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "identifier"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "identifier"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// create clinicalStatus CodeableConcept from STU3 code, using the built-in "cc" transform (https://www.hl7.org/fhir/mapping-language.html#:~:text=n/a-,cc,-(text)%20or%20(system):
 * group[=].rule[+].name = "clinicalStatus"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "clinicalStatus"
@@ -60,17 +68,11 @@ Usage: #definition
 * group[=].rule[=].target[0].context = "tgt"
 * group[=].rule[=].target[=].element = "clinicalStatus"
 * group[=].rule[=].target[=].variable = "vt"
-* group[=].rule[=].target[+].context = "vt"
-* group[=].rule[=].target[=].element = "coding"
-* group[=].rule[=].target[=].variable = "c"
-* group[=].rule[=].target[+].context = "c"
-* group[=].rule[=].target[=].element = "system"
-* group[=].rule[=].target[=].transform = #copy
-* group[=].rule[=].target[=].parameter.valueString = "http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical"
-* group[=].rule[=].target[+].context = "c"
-* group[=].rule[=].target[=].element = "code"
-* group[=].rule[=].target[=].transform = #copy
-* group[=].rule[=].target[=].parameter.valueId = "vs"
+* group[=].rule[=].target[=].transform = #cc
+* group[=].rule[=].target[=].parameter[0].valueString = "http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical"
+* group[=].rule[=].target[=].parameter[+].valueId = "vs"
+
+// create verification CodeableConcept from STU3 code, using the built-in "cc" transform:
 * group[=].rule[+].name = "verificationStatus"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "verificationStatus"
@@ -78,62 +80,49 @@ Usage: #definition
 * group[=].rule[=].target[0].context = "tgt"
 * group[=].rule[=].target[=].element = "verificationStatus"
 * group[=].rule[=].target[=].variable = "vt"
-* group[=].rule[=].target[+].context = "vt"
-* group[=].rule[=].target[=].element = "coding"
-* group[=].rule[=].target[=].variable = "c"
-* group[=].rule[=].target[+].context = "c"
-* group[=].rule[=].target[=].element = "system"
-* group[=].rule[=].target[=].transform = #copy
-* group[=].rule[=].target[=].parameter.valueString = "http://terminology.hl7.org/CodeSystem/allergyintolerance-verification"
-* group[=].rule[=].target[+].context = "c"
-* group[=].rule[=].target[=].element = "code"
-* group[=].rule[=].target[=].transform = #copy
-* group[=].rule[=].target[=].parameter.valueId = "vs"
+* group[=].rule[=].target[=].transform = #cc
+* group[=].rule[=].target[=].parameter[0].valueString = "http://terminology.hl7.org/CodeSystem/allergyintolerance-verification"
+* group[=].rule[=].target[=].parameter[+].valueId = "vs"
+
+// simple identity transform for "type"
 * group[=].rule[+].name = "type"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "type"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "type"
-* group[=].rule[=].target.variable = "vvv"
 * group[=].rule[=].target.transform = #create
+
+// simple identity transform for "category"
 * group[=].rule[+].name = "category"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "category"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "category"
-* group[=].rule[=].target.variable = "vvv"
 * group[=].rule[=].target.transform = #create
-* group[=].rule[+].name = "codeCodeableConcept"
+
+// simple identity transform for "code"
+* group[=].rule[+].name = "code"
 * group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.type = "CodeableConcept"
 * group[=].rule[=].source.element = "code"
-* group[=].rule[=].source.variable = "vs"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "code"
-* group[=].rule[=].target.variable = "vt"
 * group[=].rule[=].target.transform = #create
-* group[=].rule[=].target.parameter.valueString = "CodeableConcept"
-* group[=].rule[=].dependent.name = "CodeableConceptAllergyIntolerance"
-* group[=].rule[=].dependent.variable[0] = "vs"
-* group[=].rule[=].dependent.variable[+] = "vt"
+
+// simple identity transform for "criticality"
 * group[=].rule[+].name = "criticality"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "criticality"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "criticality"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// simple identity transform for "patient"
 * group[=].rule[+].name = "patient"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "patient"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "patient"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// dateTime variant of the onset[x] choice element:
 * group[=].rule[+].name = "onsetdateTime"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.type = "dateTime"
@@ -147,6 +136,8 @@ Usage: #definition
 * group[=].rule[=].dependent.name = "dateTime"
 * group[=].rule[=].dependent.variable[0] = "vs"
 * group[=].rule[=].dependent.variable[+] = "vt"
+
+// Age variant of the onset[x] choice element:
 * group[=].rule[+].name = "onsetAge"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.type = "Age"
@@ -160,6 +151,8 @@ Usage: #definition
 * group[=].rule[=].dependent.name = "Age"
 * group[=].rule[=].dependent.variable[0] = "vs"
 * group[=].rule[=].dependent.variable[+] = "vt"
+
+// Period variant of the onset[x] choice element:
 * group[=].rule[+].name = "onsetPeriod"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.type = "Period"
@@ -173,197 +166,45 @@ Usage: #definition
 * group[=].rule[=].dependent.name = "Period"
 * group[=].rule[=].dependent.variable[0] = "vs"
 * group[=].rule[=].dependent.variable[+] = "vt"
+
+// renamed "assertedDate" to "recordedDate"
 * group[=].rule[+].name = "recordedDate"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "assertedDate"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "recordedDate"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// simple identity transform for "recorder"
 * group[=].rule[+].name = "recorder"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "recorder"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "recorder"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// simple identity transform for "recorder"
 * group[=].rule[+].name = "asserter"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "asserter"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "asserter"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// simple identity transform for "lastOccurrence"
 * group[=].rule[+].name = "lastOccurrence"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "lastOccurrence"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "lastOccurrence"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// simple identity transform for "note"
 * group[=].rule[+].name = "note"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "note"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "note"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// simple identity transform for "reaction"
 * group[=].rule[+].name = "reaction"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "reaction"
-* group[=].rule[=].source.variable = "vs0"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "reaction"
-* group[=].rule[=].target.variable = "vt0"
-* group[=].rule[=].rule[0].name = "substanceCodeableConcept"
-* group[=].rule[=].rule[=].source.context = "vs0"
-* group[=].rule[=].rule[=].source.type = "CodeableConcept"
-* group[=].rule[=].rule[=].source.element = "substance"
-* group[=].rule[=].rule[=].source.variable = "vs"
-* group[=].rule[=].rule[=].target.context = "vt0"
-* group[=].rule[=].rule[=].target.element = "substance"
-* group[=].rule[=].rule[=].target.variable = "vt"
-* group[=].rule[=].rule[=].target.transform = #create
-* group[=].rule[=].rule[=].target.parameter.valueString = "CodeableConcept"
-* group[=].rule[=].rule[=].dependent.name = "CodeableConceptAllergyIntolerance"
-* group[=].rule[=].rule[=].dependent.variable[0] = "vs"
-* group[=].rule[=].rule[=].dependent.variable[+] = "vt"
-* group[=].rule[=].rule[+].name = "manifestationCodeableConcept"
-* group[=].rule[=].rule[=].source.context = "vs0"
-* group[=].rule[=].rule[=].source.type = "CodeableConcept"
-* group[=].rule[=].rule[=].source.element = "manifestation"
-* group[=].rule[=].rule[=].source.variable = "vs"
-* group[=].rule[=].rule[=].target.context = "vt0"
-* group[=].rule[=].rule[=].target.element = "manifestation"
-* group[=].rule[=].rule[=].target.variable = "vt"
-* group[=].rule[=].rule[=].target.transform = #create
-* group[=].rule[=].rule[=].target.parameter.valueString = "CodeableConcept"
-* group[=].rule[=].rule[=].dependent.name = "CodeableConceptAllergyIntolerance"
-* group[=].rule[=].rule[=].dependent.variable[0] = "vs"
-* group[=].rule[=].rule[=].dependent.variable[+] = "vt"
-* group[=].rule[=].rule[+].name = "description"
-* group[=].rule[=].rule[=].source.context = "vs0"
-* group[=].rule[=].rule[=].source.element = "description"
-* group[=].rule[=].rule[=].source.variable = "vvv"
-* group[=].rule[=].rule[=].target.context = "vt0"
-* group[=].rule[=].rule[=].target.element = "description"
-* group[=].rule[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].rule[=].target.transform = #create
-* group[=].rule[=].rule[+].name = "onset"
-* group[=].rule[=].rule[=].source.context = "vs0"
-* group[=].rule[=].rule[=].source.element = "onset"
-* group[=].rule[=].rule[=].source.variable = "vvv"
-* group[=].rule[=].rule[=].target.context = "vt0"
-* group[=].rule[=].rule[=].target.element = "onset"
-* group[=].rule[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].rule[=].target.transform = #create
-* group[=].rule[=].rule[+].name = "severity"
-* group[=].rule[=].rule[=].source.context = "vs0"
-* group[=].rule[=].rule[=].source.element = "severity"
-* group[=].rule[=].rule[=].source.variable = "vvv"
-* group[=].rule[=].rule[=].target.context = "vt0"
-* group[=].rule[=].rule[=].target.element = "severity"
-* group[=].rule[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].rule[=].target.transform = #create
-* group[=].rule[=].rule[+].name = "exposureRouteCodeableConcept"
-* group[=].rule[=].rule[=].source.context = "vs0"
-* group[=].rule[=].rule[=].source.type = "CodeableConcept"
-* group[=].rule[=].rule[=].source.element = "exposureRoute"
-* group[=].rule[=].rule[=].source.variable = "vs"
-* group[=].rule[=].rule[=].target.context = "vt0"
-* group[=].rule[=].rule[=].target.element = "exposureRoute"
-* group[=].rule[=].rule[=].target.variable = "vt"
-* group[=].rule[=].rule[=].target.transform = #create
-* group[=].rule[=].rule[=].target.parameter.valueString = "CodeableConcept"
-* group[=].rule[=].rule[=].dependent.name = "CodeableConceptAllergyIntolerance"
-* group[=].rule[=].rule[=].dependent.variable[0] = "vs"
-* group[=].rule[=].rule[=].dependent.variable[+] = "vt"
-* group[=].rule[=].rule[+].name = "note"
-* group[=].rule[=].rule[=].source.context = "vs0"
-* group[=].rule[=].rule[=].source.element = "note"
-* group[=].rule[=].rule[=].source.variable = "vvv"
-* group[=].rule[=].rule[=].target.context = "vt0"
-* group[=].rule[=].rule[=].target.element = "note"
-* group[=].rule[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].rule[=].target.transform = #create
-* group[+].name = "CodeableConceptAllergyIntolerance"
-* group[=].typeMode = #type-and-types
-* group[=].input[0].name = "src"
-* group[=].input[=].type = "CodeableConcept"
-* group[=].input[=].mode = #source
-* group[=].input[+].name = "tgt"
-* group[=].input[=].type = "CodeableConcept"
-* group[=].input[=].mode = #target
-* group[=].rule[0].name = "coding"
-* group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "coding"
-* group[=].rule[=].source.variable = "vs"
-* group[=].rule[=].target.context = "tgt"
-* group[=].rule[=].target.element = "coding"
-* group[=].rule[=].target.variable = "vt"
-* group[=].rule[=].target.transform = #create
-* group[=].rule[=].target.parameter.valueString = "Coding"
-* group[=].rule[=].dependent.name = "SctCoding"
-* group[=].rule[=].dependent.variable[0] = "vs"
-* group[=].rule[=].dependent.variable[+] = "vt"
-* group[=].rule[+].name = "text"
-* group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "text"
-* group[=].rule[=].source.variable = "text"
-* group[=].rule[=].target.context = "tgt"
-* group[=].rule[=].target.element = "text"
-* group[=].rule[=].target.transform = #copy
-* group[=].rule[=].target.parameter.valueId = "text"
-* group[+].name = "SctCoding"
-* group[=].typeMode = #type-and-types
-* group[=].input[0].name = "src"
-* group[=].input[=].type = "Coding"
-* group[=].input[=].mode = #source
-* group[=].input[+].name = "tgt"
-* group[=].input[=].type = "Coding"
-* group[=].input[=].mode = #target
-* group[=].rule[0].name = "system"
-* group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "system"
-* group[=].rule[=].source.variable = "system"
-* group[=].rule[=].target.context = "tgt"
-* group[=].rule[=].target.element = "system"
-* group[=].rule[=].target.transform = #copy
-* group[=].rule[=].target.parameter.valueId = "system"
-* group[=].rule[+].name = "version"
-* group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "version"
-* group[=].rule[=].source.variable = "version"
-* group[=].rule[=].target.context = "tgt"
-* group[=].rule[=].target.element = "version"
-* group[=].rule[=].target.transform = #copy
-* group[=].rule[=].target.parameter.valueId = "version"
-* group[=].rule[+].name = "code"
-* group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "code"
-* group[=].rule[=].source.variable = "code"
-* group[=].rule[=].target.context = "tgt"
-* group[=].rule[=].target.element = "code"
-* group[=].rule[=].target.transform = #copy
-* group[=].rule[=].target.parameter.valueId = "code"
-* group[=].rule[+].name = "display"
-* group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "display"
-* group[=].rule[=].source.variable = "display"
-* group[=].rule[=].target.context = "tgt"
-* group[=].rule[=].target.element = "display"
-* group[=].rule[=].target.transform = #copy
-* group[=].rule[=].target.parameter.valueId = "display"
-* group[=].rule[+].name = "userSelected"
-* group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "userSelected"
-* group[=].rule[=].source.variable = "userSelected"
-* group[=].rule[=].target.context = "tgt"
-* group[=].rule[=].target.element = "userSelected"
-* group[=].rule[=].target.transform = #copy
-* group[=].rule[=].target.parameter.valueId = "userSelected"
