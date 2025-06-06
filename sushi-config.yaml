@@ -71,6 +71,7 @@ parameters:
   path-resource: 
     - input/maps
   special-url: [https://fhir.interweavedigital.nhs.uk/CodeSystem/Interweave-OrganizationType, https://fhir.hl7.org.uk/ValueSet/UKCore-MedicationCode, https://fhir.hl7.org.uk/ValueSet/UKCore-MedicationForm, https://fhir.hl7.org.uk/ValueSet/UKCore-ConditionCode, https://fhir.hl7.org.uk/ValueSet/UKCore-ConditionCategory, https://fhir.hl7.org.uk/ValueSet/UKCore-AllergyCode, https://fhir.hl7.org.uk/ValueSet/UKCore-AllergyManifestation, https://fhir.hl7.org.uk/ValueSet/UKCore-AllergySubstance, https://fhir.hl7.org.uk/ValueSet/UKCore-MedicationRequestCategory, https://fhir.interweavedigital.nhs.uk/CodeSystem/Interweave-MedicationRequestCourseOfTherapyType, https://fhir.hl7.org.uk/ValueSet/UKCore-MedicationRequestCourseOfTherapy, https://fhir.hl7.org.uk/CodeSystem/UKCore-ConditionCategory, https://fhir.interweavedigital.nhs.uk/R4/ConceptMap/Interweave-Organization-Type, https://fhir.hl7.org.uk/StructureDefinition/Extension-UKCore-MedicationRepeatInformation, https://fhir.hl7.org.uk/CodeSystem/UKCore-MedicationRequestCourseOfTherapy]
+  no-narrative: [StructureDefinition/*, ValueSet/*, CodeSystem/*, StructureMap/*, ConceptMap/*]
   path-expansion-params: '../../exp-params.json'  # for using UK ed of SNOMED
 # parameters:
 #   excludettl: true
