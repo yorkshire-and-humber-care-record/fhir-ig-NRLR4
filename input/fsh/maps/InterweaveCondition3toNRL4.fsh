@@ -7,12 +7,17 @@ Description: "Interweave Condition Structure map for conversion."
 * url = "https://fhir.interweavedigital.nhs.uk/NRL-R4/StructureMap/InterweaveCondition3toNRL4"
 * name = "InterweaveCondition3toNRL4"
 * status = #draft
+
 * structure[0].url = "https://fhir.yhcr.nhs.uk/StructureDefinition/Interweave-Condition"
 * structure[=].mode = #source
 * structure[=].alias = "ConditionSTU3"
 * structure[+].url = "https://fhir.interweavedigital.nhs.uk/NRL-R4/StructureDefinition/Interweave-Condition"
 * structure[=].mode = #target
 * structure[=].alias = "ConditionR4"
+
+// Special syntax for importing all base STU3 to R4 StructureMaps. See https://build.fhir.org/ig/HL7/fhir-cross-version/StructureMap-Patient3to4.html for example.
+* import[0] = "http://hl7.org/fhir/StructureMap/*3to4"
+
 * group[0].name = "Condition"
 * group[=].typeMode = #type-and-types
 * group[=].input[0].name = "src"
@@ -21,10 +26,15 @@ Description: "Interweave Condition Structure map for conversion."
 * group[=].input[+].name = "tgt"
 * group[=].input[=].type = "ConditionR4"
 * group[=].input[=].mode = #target
+
+// assign UUID (to be used for NRL conversions as the data will be converted on the fly):
 * group[=].rule[0].name = "id"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "id"
+* group[=].rule[=].target.context = "tgt"
+* group[=].rule[=].target.element = "id"
 * group[=].rule[=].target.transform = #uuid
+
 * group[=].rule[+].name = "identifier"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "identifier"
@@ -32,22 +42,19 @@ Description: "Interweave Condition Structure map for conversion."
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "identifier"
 * group[=].rule[=].target.variable = "vt0"
+
 * group[=].rule[=].rule[0].name = "use"
 * group[=].rule[=].rule[=].source.context = "vs0"
 * group[=].rule[=].rule[=].source.element = "use"
-* group[=].rule[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].rule[=].target.context = "vt0"
 * group[=].rule[=].rule[=].target.element = "use"
-* group[=].rule[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].rule[=].target.transform = #create
+
 * group[=].rule[=].rule[+].name = "type"
 * group[=].rule[=].rule[=].source.context = "vs0"
 * group[=].rule[=].rule[=].source.element = "type"
-* group[=].rule[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].rule[=].target.context = "vt0"
 * group[=].rule[=].rule[=].target.element = "type"
-* group[=].rule[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].rule[=].target.transform = #create
+
 * group[=].rule[=].rule[+].name = "system"
 * group[=].rule[=].rule[=].source.context = "vs0"
 * group[=].rule[=].rule[=].source.element = "system"
@@ -66,30 +73,29 @@ Description: "Interweave Condition Structure map for conversion."
 * group[=].rule[=].rule[=].target.element = "system"
 * group[=].rule[=].rule[=].target.transform = #copy
 * group[=].rule[=].rule[=].target.parameter.valueId = "system"
+
 * group[=].rule[=].rule[+].name = "value"
 * group[=].rule[=].rule[=].source.context = "vs0"
 * group[=].rule[=].rule[=].source.element = "value"
-* group[=].rule[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].rule[=].target.context = "vt0"
 * group[=].rule[=].rule[=].target.element = "value"
-* group[=].rule[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].rule[=].target.transform = #create
+
+// simple identity transform for "period"
 * group[=].rule[=].rule[+].name = "period"
 * group[=].rule[=].rule[=].source.context = "vs0"
 * group[=].rule[=].rule[=].source.element = "period"
-* group[=].rule[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].rule[=].target.context = "vt0"
 * group[=].rule[=].rule[=].target.element = "period"
-* group[=].rule[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].rule[=].target.transform = #create
+
+// simple identity transform for "assigner"
 * group[=].rule[=].rule[+].name = "assigner"
 * group[=].rule[=].rule[=].source.context = "vs0"
 * group[=].rule[=].rule[=].source.element = "assigner"
-* group[=].rule[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].rule[=].target.context = "vt0"
 * group[=].rule[=].rule[=].target.element = "assigner"
-* group[=].rule[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].rule[=].target.transform = #create
+
+
+// create clinicalStatus CodeableConcept from STU3 code, using the built-in "cc" transform (https://www.hl7.org/fhir/mapping-language.html#:~:text=n/a-,cc,-(text)%20or%20(system):
 * group[=].rule[+].name = "clinicalStatus"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "clinicalStatus"
@@ -97,17 +103,11 @@ Description: "Interweave Condition Structure map for conversion."
 * group[=].rule[=].target[0].context = "tgt"
 * group[=].rule[=].target[=].element = "clinicalStatus"
 * group[=].rule[=].target[=].variable = "vt"
-* group[=].rule[=].target[+].context = "vt"
-* group[=].rule[=].target[=].element = "coding"
-* group[=].rule[=].target[=].variable = "c"
-* group[=].rule[=].target[+].context = "c"
-* group[=].rule[=].target[=].element = "system"
-* group[=].rule[=].target[=].transform = #copy
-* group[=].rule[=].target[=].parameter.valueString = "http://terminology.hl7.org/CodeSystem/condition-clinical"
-* group[=].rule[=].target[+].context = "c"
-* group[=].rule[=].target[=].element = "code"
-* group[=].rule[=].target[=].transform = #copy
-* group[=].rule[=].target[=].parameter.valueId = "vs"
+* group[=].rule[=].target[=].transform = #cc
+* group[=].rule[=].target[=].parameter[0].valueString = "http://terminology.hl7.org/CodeSystem/condition-clinical"
+* group[=].rule[=].target[=].parameter[+].valueId = "vs"
+
+// create verification CodeableConcept from STU3 code, using the built-in "cc" transform:
 * group[=].rule[+].name = "verificationStatus"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "verificationStatus"
@@ -115,17 +115,11 @@ Description: "Interweave Condition Structure map for conversion."
 * group[=].rule[=].target[0].context = "tgt"
 * group[=].rule[=].target[=].element = "verificationStatus"
 * group[=].rule[=].target[=].variable = "vt"
-* group[=].rule[=].target[+].context = "vt"
-* group[=].rule[=].target[=].element = "coding"
-* group[=].rule[=].target[=].variable = "c"
-* group[=].rule[=].target[+].context = "c"
-* group[=].rule[=].target[=].element = "system"
-* group[=].rule[=].target[=].transform = #copy
-* group[=].rule[=].target[=].parameter.valueString = "http://terminology.hl7.org/CodeSystem/condition-ver-status"
-* group[=].rule[=].target[+].context = "c"
-* group[=].rule[=].target[=].element = "code"
-* group[=].rule[=].target[=].transform = #copy
-* group[=].rule[=].target[=].parameter.valueId = "vs"
+* group[=].rule[=].target[=].transform = #cc
+* group[=].rule[=].target[=].parameter[0].valueString = "http://terminology.hl7.org/CodeSystem/condition-ver-status"
+* group[=].rule[=].target[=].parameter[+].valueId = "vs"
+
+// translate "category using conceptmap"
 * group[=].rule[+].name = "category"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "category"
@@ -136,46 +130,43 @@ Description: "Interweave Condition Structure map for conversion."
 * group[=].rule[=].target.parameter[0].valueId = "cat"
 * group[=].rule[=].target.parameter[+].valueString = "https://fhir.interweavedigital.nhs.uk/R4/ConceptMap/Interweave-NRL-Condition-Category"
 * group[=].rule[=].target.parameter[+].valueString = "CodeableConcept"
+
+// simple identity transform for "severity"
 * group[=].rule[+].name = "severity"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "severity"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "severity"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// simple identity transform for "code"
 * group[=].rule[+].name = "code"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "code"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "code"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// simple identity transform for "bodySite"
 * group[=].rule[+].name = "bodySite"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "bodySite"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "bodySite"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// simple identity transform for "subject"
 * group[=].rule[+].name = "subject"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "subject"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "subject"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// renamed "context" to "encounter"
 * group[=].rule[+].name = "context"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "context"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "encounter"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// dateTime variant of the onset[x] choice element:
 * group[=].rule[+].name = "onsetDateTime"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.type = "dateTime"
@@ -189,6 +180,8 @@ Description: "Interweave Condition Structure map for conversion."
 * group[=].rule[=].dependent.name = "dateTime"
 * group[=].rule[=].dependent.variable[0] = "vs"
 * group[=].rule[=].dependent.variable[+] = "vt"
+
+// dateTime variant of the abatement[x] choice element:
 * group[=].rule[+].name = "abatementDateTime"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.type = "dateTime"
@@ -202,6 +195,8 @@ Description: "Interweave Condition Structure map for conversion."
 * group[=].rule[=].dependent.name = "dateTime"
 * group[=].rule[=].dependent.variable[0] = "vs"
 * group[=].rule[=].dependent.variable[+] = "vt"
+
+// Age variant of the abatement[x] choice element:
 * group[=].rule[+].name = "abatementAge"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.type = "Age"
@@ -215,6 +210,8 @@ Description: "Interweave Condition Structure map for conversion."
 * group[=].rule[=].dependent.name = "Age"
 * group[=].rule[=].dependent.variable[0] = "vs"
 * group[=].rule[=].dependent.variable[+] = "vt"
+
+// Period variant of the abatement[x] choice element:
 * group[=].rule[+].name = "abatementPeriod"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.type = "Period"
@@ -228,6 +225,8 @@ Description: "Interweave Condition Structure map for conversion."
 * group[=].rule[=].dependent.name = "Period"
 * group[=].rule[=].dependent.variable[0] = "vs"
 * group[=].rule[=].dependent.variable[+] = "vt"
+
+// Range variant of the abatement[x] choice element:
 * group[=].rule[+].name = "abatementRange"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.type = "Range"
@@ -241,6 +240,8 @@ Description: "Interweave Condition Structure map for conversion."
 * group[=].rule[=].dependent.name = "Range"
 * group[=].rule[=].dependent.variable[0] = "vs"
 * group[=].rule[=].dependent.variable[+] = "vt"
+
+// string variant of the abatement[x] choice element:
 * group[=].rule[+].name = "abatementString"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.type = "string"
@@ -254,99 +255,38 @@ Description: "Interweave Condition Structure map for conversion."
 * group[=].rule[=].dependent.name = "string"
 * group[=].rule[=].dependent.variable[0] = "vs"
 * group[=].rule[=].dependent.variable[+] = "vt"
+
+// renamed "assertedDate" to "recordedDate"
 * group[=].rule[+].name = "assertedDate"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "assertedDate"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "recordedDate"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// simple identity transform for "asserter"
 * group[=].rule[+].name = "asserter"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "asserter"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "asserter"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// simple identity transform for "stage"
 * group[=].rule[+].name = "stage"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "stage"
-* group[=].rule[=].source.variable = "s"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "stage"
-* group[=].rule[=].target.variable = "t"
-* group[=].rule[=].dependent.name = "stage"
-* group[=].rule[=].dependent.variable[0] = "s"
-* group[=].rule[=].dependent.variable[+] = "t"
+
+// simple identity transform for "evidence"
 * group[=].rule[+].name = "evidence"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "evidence"
-* group[=].rule[=].source.variable = "s"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "evidence"
-* group[=].rule[=].target.variable = "t"
-* group[=].rule[=].dependent.name = "evidence"
-* group[=].rule[=].dependent.variable[0] = "s"
-* group[=].rule[=].dependent.variable[+] = "t"
+
+// simple identity transform for "note"
 * group[=].rule[+].name = "note"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "note"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "note"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
-* group[+].name = "stage"
-* group[=].typeMode = #type-and-types
-* group[=].input[0].name = "src"
-* group[=].input[=].mode = #source
-* group[=].input[+].name = "tgt"
-* group[=].input[=].mode = #target
-* group[=].rule[0].name = "summary"
-* group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "summary"
-* group[=].rule[=].source.variable = "vvv"
-* group[=].rule[=].target.context = "tgt"
-* group[=].rule[=].target.element = "summary"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
-* group[=].rule[+].name = "assessment"
-* group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "assessment"
-* group[=].rule[=].source.variable = "vvv"
-* group[=].rule[=].target.context = "tgt"
-* group[=].rule[=].target.element = "assessment"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
-* group[=].rule[+].name = "type"
-* group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "type"
-* group[=].rule[=].source.variable = "vvv"
-* group[=].rule[=].target.context = "tgt"
-* group[=].rule[=].target.element = "type"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
-* group[+].name = "evidence"
-* group[=].typeMode = #type-and-types
-* group[=].input[0].name = "src"
-* group[=].input[=].mode = #source
-* group[=].input[+].name = "tgt"
-* group[=].input[=].mode = #target
-* group[=].rule[0].name = "code"
-* group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "code"
-* group[=].rule[=].source.variable = "vvv"
-* group[=].rule[=].target.context = "tgt"
-* group[=].rule[=].target.element = "code"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
-* group[=].rule[+].name = "detail"
-* group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "detail"
-* group[=].rule[=].source.variable = "vvv"
-* group[=].rule[=].target.context = "tgt"
-* group[=].rule[=].target.element = "detail"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
