@@ -7,13 +7,17 @@ Description: "Interweave Medication Request Structure map for conversion."
 * url = "https://fhir.interweavedigital.nhs.uk/NRL-R4/StructureMap/InterweaveMedicationRequest3toNRL4"
 * name = "InterweaveMedicationRequest3toNRL4"
 * status = #draft
-* description = "Interweave Medication Request Structure map for conversion."
+
 * structure[0].url = "https://fhir.yhcr.nhs.uk/StructureDefinition/Interweave-MedicationRequest"
 * structure[=].mode = #source
 * structure[=].alias = "MedicationRequestSTU3"
 * structure[+].url = "https://fhir.interweavedigital.nhs.uk/NRL-R4/StructureDefinition/Interweave-MedicationRequest"
 * structure[=].mode = #target
 * structure[=].alias = "MedicationRequestR4"
+
+// Special syntax for importing all base STU3 to R4 StructureMaps. See https://build.fhir.org/ig/HL7/fhir-cross-version/StructureMap-Patient3to4.html for example.
+* import[0] = "http://hl7.org/fhir/StructureMap/*3to4"
+
 * group[0].name = "MedicationRequest"
 * group[=].typeMode = #type-and-types
 * group[=].input[0].name = "src"
@@ -22,10 +26,15 @@ Description: "Interweave Medication Request Structure map for conversion."
 * group[=].input[+].name = "tgt"
 * group[=].input[=].type = "MedicationRequestR4"
 * group[=].input[=].mode = #target
+
+// assign UUID (to be used for NRL conversions as the data will be converted on the fly):
 * group[=].rule[0].name = "id"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "id"
+* group[=].rule[=].target.context = "tgt"
+* group[=].rule[=].target.element = "id"
 * group[=].rule[=].target.transform = #uuid
+
 * group[=].rule[+].name = "extension"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "extension"
@@ -48,6 +57,7 @@ Description: "Interweave Medication Request Structure map for conversion."
 * group[=].rule[=].rule.target[=].parameter[0].valueId = "vs"
 * group[=].rule[=].rule.target[=].parameter[+].valueString = "https://fhir.interweavedigital.nhs.uk/R4/ConceptMap/Interweave-NRL-MedicationRequest-PrescriptionType"
 * group[=].rule[=].rule.target[=].parameter[+].valueString = "CodeableConcept"
+
 * group[=].rule[+].name = "extension"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "extension"
@@ -64,17 +74,12 @@ Description: "Interweave Medication Request Structure map for conversion."
 * group[=].rule[=].rule.target.context = "tgt"
 * group[=].rule[=].rule.target.element = "statusReason"
 * group[=].rule[=].rule.target.variable = "vt1"
-* group[=].rule[=].rule.rule.name = "valueCodeableConcept"
+* group[=].rule[=].rule.rule.name = "statusReason"
 * group[=].rule[=].rule.rule.source.context = "vs"
-* group[=].rule[=].rule.rule.source.type = "CodeableConcept"
 * group[=].rule[=].rule.rule.source.element = "value"
-* group[=].rule[=].rule.rule.source.variable = "vs1"
 * group[=].rule[=].rule.rule.target.context = "tgt"
 * group[=].rule[=].rule.rule.target.element = "statusReason"
-* group[=].rule[=].rule.rule.target.variable = "vt2"
-* group[=].rule[=].rule.rule.dependent.name = "CodeableConceptMedicationRequest"
-* group[=].rule[=].rule.rule.dependent.variable[0] = "vs1"
-* group[=].rule[=].rule.rule.dependent.variable[+] = "vt2"
+
 * group[=].rule[+].name = "extension"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "extension"
@@ -138,6 +143,7 @@ Description: "Interweave Medication Request Structure map for conversion."
 * group[=].rule[=].rule[=].dependent.name = "ExtensionDateTimeValue"
 * group[=].rule[=].rule[=].dependent.variable[0] = "vs"
 * group[=].rule[=].rule[=].dependent.variable[+] = "vt"
+
 * group[=].rule[+].name = "extension"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "extension"
@@ -157,30 +163,29 @@ Description: "Interweave Medication Request Structure map for conversion."
 * group[=].rule[=].rule.dependent.name = "DispenseRequest"
 * group[=].rule[=].rule.dependent.variable[0] = "vs"
 * group[=].rule[=].rule.dependent.variable[+] = "vt"
+
+// simple identity transform for "identifier"
 * group[=].rule[+].name = "identifier"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "identifier"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "identifier"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// simple identity transform for "status"
 * group[=].rule[+].name = "status"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "status"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "status"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// simple identity transform for "intent"
 * group[=].rule[+].name = "intent"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "intent"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "intent"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+
 * group[=].rule[+].name = "category"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "category"
@@ -191,6 +196,7 @@ Description: "Interweave Medication Request Structure map for conversion."
 * group[=].rule[=].target.parameter[0].valueId = "cat"
 * group[=].rule[=].target.parameter[+].valueString = "https://fhir.interweavedigital.nhs.uk/R4/ConceptMap/Interweave-NRL-MedicationRequest-Category"
 * group[=].rule[=].target.parameter[+].valueString = "CodeableConcept"
+
 * group[=].rule[+].name = "medicationReference"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.type = "Reference"
@@ -204,30 +210,29 @@ Description: "Interweave Medication Request Structure map for conversion."
 * group[=].rule[=].dependent.name = "Reference"
 * group[=].rule[=].dependent.variable[0] = "vs"
 * group[=].rule[=].dependent.variable[+] = "vt"
+
+// simple identity transform for "subject"
 * group[=].rule[+].name = "subject"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "subject"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "subject"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// simple identity transform for "context"
 * group[=].rule[+].name = "context"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "context"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "encounter"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// simple identity transform for "authoredOn"
 * group[=].rule[+].name = "authoredOn"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "authoredOn"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "authoredOn"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// simple identity transform for "requester"
 * group[=].rule[+].name = "requester"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "requester"
@@ -235,46 +240,43 @@ Description: "Interweave Medication Request Structure map for conversion."
 * group[=].rule[=].dependent.name = "requester"
 * group[=].rule[=].dependent.variable[0] = "vs0"
 * group[=].rule[=].dependent.variable[+] = "tgt"
+
+// simple identity transform for "recorder"
 * group[=].rule[+].name = "recorder"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "recorder"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "recorder"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// simple identity transform for "reasonCode"
 * group[=].rule[+].name = "reasonCode"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "reasonCode"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "reasonCode"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// simple identity transform for "reasonReference"
 * group[=].rule[+].name = "reasonReference"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "reasonReference"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "reasonReference"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// simple identity transform for "note"
 * group[=].rule[+].name = "note"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "note"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "note"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+// simple identity transform for "dosageInstruction"
 * group[=].rule[+].name = "dosageInstruction"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "dosageInstruction"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "dosageInstruction"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+
 * group[=].rule[+].name = "dispenseRequest"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "dispenseRequest"
@@ -285,8 +287,9 @@ Description: "Interweave Medication Request Structure map for conversion."
 * group[=].rule[=].dependent.name = "dispense"
 * group[=].rule[=].dependent.variable[0] = "vs0"
 * group[=].rule[=].dependent.variable[+] = "vt0"
+
 * group[+].name = "requester"
-* group[=].typeMode = #type-and-types
+* group[=].typeMode = #none
 * group[=].input[0].name = "src"
 * group[=].input[=].mode = #source
 * group[=].input[+].name = "tgt"
@@ -294,125 +297,43 @@ Description: "Interweave Medication Request Structure map for conversion."
 * group[=].rule.name = "agent"
 * group[=].rule.source.context = "src"
 * group[=].rule.source.element = "agent"
-* group[=].rule.source.variable = "vvv"
 * group[=].rule.target.context = "tgt"
 * group[=].rule.target.element = "requester"
-* group[=].rule.target.variable = "vvv"
-* group[=].rule.target.transform = #create
+
+
 * group[+].name = "dispense"
 * group[=].typeMode = #type-and-types
 * group[=].input[0].name = "src"
 * group[=].input[=].mode = #source
 * group[=].input[+].name = "tgt"
 * group[=].input[=].mode = #target
+
 * group[=].rule[0].name = "validityPeriod"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "validityPeriod"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "validityPeriod"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
 * group[=].rule[+].name = "quantity"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "quantity"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "quantity"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+
 * group[=].rule[+].name = "expectedSupplyDuration"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "expectedSupplyDuration"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "expectedSupplyDuration"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
+
+
 * group[=].rule[+].name = "performer"
 * group[=].rule[=].source.context = "src"
 * group[=].rule[=].source.element = "performer"
-* group[=].rule[=].source.variable = "vvv"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "performer"
-* group[=].rule[=].target.variable = "vvv"
-* group[=].rule[=].target.transform = #create
-* group[+].name = "CodeableConceptMedicationRequest"
-* group[=].typeMode = #type-and-types
-* group[=].input[0].name = "src"
-* group[=].input[=].type = "CodeableConcept"
-* group[=].input[=].mode = #source
-* group[=].input[+].name = "tgt"
-* group[=].input[=].type = "CodeableConcept"
-* group[=].input[=].mode = #target
-* group[=].rule[0].name = "coding"
-* group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "coding"
-* group[=].rule[=].source.variable = "vs"
-* group[=].rule[=].target.context = "tgt"
-* group[=].rule[=].target.element = "coding"
-* group[=].rule[=].target.variable = "vt"
-* group[=].rule[=].target.transform = #create
-* group[=].rule[=].target.parameter.valueString = "Coding"
-* group[=].rule[=].dependent.name = "SctCoding"
-* group[=].rule[=].dependent.variable[0] = "vs"
-* group[=].rule[=].dependent.variable[+] = "vt"
-* group[=].rule[+].name = "text"
-* group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "text"
-* group[=].rule[=].source.variable = "text"
-* group[=].rule[=].target.context = "tgt"
-* group[=].rule[=].target.element = "text"
-* group[=].rule[=].target.transform = #copy
-* group[=].rule[=].target.parameter.valueId = "text"
-* group[+].name = "SctCoding"
-* group[=].typeMode = #type-and-types
-* group[=].input[0].name = "src"
-* group[=].input[=].type = "Coding"
-* group[=].input[=].mode = #source
-* group[=].input[+].name = "tgt"
-* group[=].input[=].type = "Coding"
-* group[=].input[=].mode = #target
-* group[=].rule[0].name = "system"
-* group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "system"
-* group[=].rule[=].source.variable = "system"
-* group[=].rule[=].target.context = "tgt"
-* group[=].rule[=].target.element = "system"
-* group[=].rule[=].target.transform = #copy
-* group[=].rule[=].target.parameter.valueId = "system"
-* group[=].rule[+].name = "version"
-* group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "version"
-* group[=].rule[=].source.variable = "version"
-* group[=].rule[=].target.context = "tgt"
-* group[=].rule[=].target.element = "version"
-* group[=].rule[=].target.transform = #copy
-* group[=].rule[=].target.parameter.valueId = "version"
-* group[=].rule[+].name = "code"
-* group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "code"
-* group[=].rule[=].source.variable = "code"
-* group[=].rule[=].target.context = "tgt"
-* group[=].rule[=].target.element = "code"
-* group[=].rule[=].target.transform = #copy
-* group[=].rule[=].target.parameter.valueId = "code"
-* group[=].rule[+].name = "display"
-* group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "display"
-* group[=].rule[=].source.variable = "display"
-* group[=].rule[=].target.context = "tgt"
-* group[=].rule[=].target.element = "display"
-* group[=].rule[=].target.transform = #copy
-* group[=].rule[=].target.parameter.valueId = "display"
-* group[=].rule[+].name = "userSelected"
-* group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "userSelected"
-* group[=].rule[=].source.variable = "userSelected"
-* group[=].rule[=].target.context = "tgt"
-* group[=].rule[=].target.element = "userSelected"
-* group[=].rule[=].target.transform = #copy
-* group[=].rule[=].target.parameter.valueId = "userSelected"
+
 * group[+].name = "ExtensionUnsignedIntValue"
 * group[=].typeMode = #type-and-types
 * group[=].input[0].name = "src"
