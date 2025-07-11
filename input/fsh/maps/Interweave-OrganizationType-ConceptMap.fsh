@@ -15,7 +15,9 @@ Description: "Interweave OrganizationType Concept map"
 * group.element[=].target.code = #180
 * group.element[=].target.equivalence = #equivalent
 * group.element[+].code = #197
+* group.element[=].display = "NHS Trust"
 * group.element[=].target.code = #197
+* group.element[=].target.display = "NHS Trust"
 * group.element[=].target.equivalence = #equivalent
 * group.element[+].code = #198
 * group.element[=].target.code = #198
