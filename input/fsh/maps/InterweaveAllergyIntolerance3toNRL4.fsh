@@ -33,7 +33,7 @@ Usage: #definition
 * group[=].rule[=].source.element = "id"
 * group[=].rule[=].target.context = "tgt"
 * group[=].rule[=].target.element = "id"
-* group[=].rule[=].target.transform = #uuid
+//* group[=].rule[=].target.transform = #uuid
 
 * group[=].rule[+].name = "meta"
 * group[=].rule[=].source.context = "src"
@@ -340,20 +340,17 @@ Usage: #definition
 * group[=].rule[=].rule[=].target.transform = #create
 * group[=].rule[+].name = "setBaseProfileTag"
 * group[=].rule[=].source.context = "src"
-* group[=].rule[=].source.element = "versionId"
-* group[=].rule[=].source.variable = "baseProfileTag"
 * group[=].rule[=].target.context = "tgt"
-* group[=].rule[=].target.contextType = #variable
 * group[=].rule[=].target.element = "tag"
 * group[=].rule[=].target.variable = "tgtTag"
 * group[=].rule[=].rule[0].name = "setBaseProfileSystem"
-* group[=].rule[=].rule[=].source.context = "baseProfileTag"
+* group[=].rule[=].rule[=].source.context = "src"
 * group[=].rule[=].rule[=].target.context = "tgtTag"
 * group[=].rule[=].rule[=].target.element = "system"
 * group[=].rule[=].rule[=].target.transform = #copy
 * group[=].rule[=].rule[=].target.parameter.valueString = "https://fhir.interweavedigital.nhs.uk/BaseProfile"
 * group[=].rule[=].rule[+].name = "setBaseProfileCode"
-* group[=].rule[=].rule[=].source.context = "baseProfileTag"
+* group[=].rule[=].rule[=].source.context = "src"
 * group[=].rule[=].rule[=].target.context = "tgtTag"
 * group[=].rule[=].rule[=].target.element = "code"
 * group[=].rule[=].rule[=].target.transform = #copy

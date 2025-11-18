@@ -1,11 +1,11 @@
-Instance: Interweave-MeidcationRequestPrescriptionType-ConceptMap
+Instance: Interweave-MedicationRequestPrescriptionType-ConceptMap
 InstanceOf: ConceptMap
 Usage: #definition
-Description: "Interweave MeidcationRequest PrescriptionType Concept map"
+Description: "Interweave MedicationRequest PrescriptionType Concept map"
 * version = "0.0.1"
 * date  = "2025-05-06"
 * experimental = false
-* title = "Interweave MeidcationRequestPrescriptionType Concept map"
+* title = "Interweave MedicationRequestPrescriptionType Concept map"
 * status = #active
 * contact.telecom.system = #email
 
@@ -37,7 +37,7 @@ Description: "Interweave MeidcationRequest PrescriptionType Concept map"
 * group[=].element[=].target.display = "Delayed prescribing"
 * group[=].element[=].target.equivalence = #equivalent
 
-//* url = "https://fhir.interweavedigital.nhs.uk/NRL-R4/ConceptMap/Interweave-NRL-MedicationRequest-PrescriptionType"
+* url = "https://fhir.interweavedigital.nhs.uk/NRL-R4/ConceptMap/Interweave-NRL-MedicationRequest-PrescriptionType"
 * version = "1.0.0"
 * publisher = "Interweave"
-* name = "Interweave_MeidcationRequestPrescriptionType_Concept_map"
+* name = "Interweave_MedicationRequestPrescriptionType_Concept_map"

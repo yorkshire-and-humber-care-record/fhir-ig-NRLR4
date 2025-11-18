@@ -1,11 +1,11 @@
-Instance: Interweave-MeidcationRequestCategory-ConceptMap
+Instance: Interweave-MedicationRequestCategory-ConceptMap
 InstanceOf: ConceptMap
 Usage: #definition
-Description: "Interweave MeidcationRequestCategory Concept map"
+Description: "Interweave MedicationRequestCategory Concept map"
 * version = "0.0.1"
 * date  = "2025-05-06"
 * experimental = false
-* title = "Interweave MeidcationRequestCategory Concept map"
+* title = "Interweave MedicationRequestCategory Concept map"
 * status = #active
 * contact.telecom.system = #email
 * sourceCanonical = "https://fhir.yhcr.nhs.uk/ValueSet/Interweave-MedicationRequestCategory-1"
@@ -31,7 +31,7 @@ Description: "Interweave MeidcationRequestCategory Concept map"
 * group[=].element[=].target.code = #discharge
 * group[=].element[=].target.display = "Discharge"
 * group[=].element[=].target.equivalence = #equivalent
-//* url = "https://fhir.interweavedigital.nhs.uk/R4/ConceptMap/Interweave-NRL-MedicationRequest-Category"
+* url = "https://fhir.interweavedigital.nhs.uk/R4/ConceptMap/Interweave-NRL-MedicationRequest-Category"
 * version = "1.0.0"
 * publisher = "Interweave"
-* name = "Interweave_MeidcationRequestCategory_Concept_map"
+* name = "Interweave_MedicationRequestCategory_Concept_map"
